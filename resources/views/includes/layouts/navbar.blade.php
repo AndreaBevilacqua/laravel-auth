@@ -19,7 +19,7 @@
                 </li>
                 @auth
                 <li class="nav-item">
-                    <a class="nav-link @if(Route::is('admin/projects*')) active @endif" href="{{ route('admin.projects.index') }}">{{ __('Home') }}Projects</a>
+                    <a class="nav-link @if(Route::is('admin/projects*')) active @endif" href="{{ route('admin.projects.index') }}">Projects</a>
                 </li>
                 @endauth
             </ul>
