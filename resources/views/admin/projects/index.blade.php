@@ -56,6 +56,10 @@
 
     </tbody>
   </table>
+
+  @if($projects->hasPages())
+    {{ $projects->links()}}
+  @endif
 @endsection
 
 @section('scripts')
