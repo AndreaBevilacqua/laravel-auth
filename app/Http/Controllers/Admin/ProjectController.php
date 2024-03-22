@@ -66,7 +66,14 @@ class ProjectController extends Controller
      */
     public function update(Request $request, Project $project)
     {
-        //
+        $data = $request->all();
+
+        $data['slug'] = Str::slug($data['title']);
+        $data['is_published'] = array_key_exists('is_published', $data);
+
+        $project->update($data);
+
+        return to_route('admin.projects.show', $project)->with('message', 'Proggetto modificato con successo')->with('type', 'success');
     }
 
     /**
