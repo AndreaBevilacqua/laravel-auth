@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\Support\Str;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -31,7 +32,16 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+
+        $project = new Project();
+
+        $project->fill($data);
+        $project->slug = Str::slug($project->title);
+
+        $project->save();
+
+        return to_route('admin.projects.show', $project)->with('message', 'Proggetto creato con successo')->with('type', 'success');
     }
 
     /**

@@ -30,12 +30,12 @@
     <div class="col-11">
         <div class="mb-3">
             <label for="image" class="form-label">Inserisci un'immagine</label>
-            <input type="url" name="image" class="form-control" id="image1" placeholder="Immagine..." value="{{old('image', '')}}">
+            <input type="url" name="image" class="form-control" id="image" placeholder="Immagine..." value="{{old('image', '')}}">
           </div>
     </div>
     <div class="col-1">
         <div class="mb-3">
-        <img src="https://marcolanci.it/boolean/assets/placeholder.png" class="img-fluid" alt="immagine post" id="preview">
+        <img src="{{old('image', 'https://marcolanci.it/boolean/assets/placeholder.png')}}" class="img-fluid" alt="immagine post" id="preview">
         </div>
     </div>
 </div>
@@ -54,6 +54,14 @@
 
 @endsection
 
-{{-- @section('scripts')
-  @vite('resources/js/delete_confirmation.js')
-@endsection --}}
+@section('scripts')
+  <script>
+    const placeholder = 'https://marcolanci.it/boolean/assets/placeholder.png';
+    const input = document.getElementById('image');
+    const preview = document.getElementById('preview');
+
+    input.addEventListener('input', () => {
+        preview.src = input.value || placeholder;
+    })
+  </script>
+@endsection
