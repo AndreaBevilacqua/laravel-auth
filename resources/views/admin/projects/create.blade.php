@@ -38,6 +38,15 @@
         <img src="{{old('image', 'https://marcolanci.it/boolean/assets/placeholder.png')}}" class="img-fluid" alt="immagine post" id="preview">
         </div>
     </div>
+    <div class="col-12 d-flex justify-content-end">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="is_published" name="is_published" @if(old('is_published', '')) checked @endif>
+            <label class="form-check-label" for="is_published">
+              Pubblicato
+            </label>
+          </div>
+          
+    </div>
 </div>
 <hr>
 

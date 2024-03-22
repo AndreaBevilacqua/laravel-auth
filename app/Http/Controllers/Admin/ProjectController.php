@@ -38,6 +38,7 @@ class ProjectController extends Controller
 
         $project->fill($data);
         $project->slug = Str::slug($project->title);
+        $project->is_published = array_key_exists('is_published', $data);
 
         $project->save();
 
