@@ -27,13 +27,23 @@
                 <textarea name="content" class="form-control @error('content') is-invalid @elseif(old('content', '')) valid @enderror" id="content" rows="10" required>
                     {{old('content', $project->content)}}
                 </textarea>
+                @error('content')
+                <div class="invalid-feedback">
+                    {{ $message}}
+                </div>
+                @enderror
               </div>
         </div>
         <div class="col-11">
             <div class="mb-3">
                 <label for="image" class="form-label">Inserisci un'immagine</label>
                 <input type="url" name="image" class="form-control @error('image') is-invalid @elseif(old('image', '')) valid @enderror" id="image" placeholder="Immagine..." value="{{old('image', $project->image)}}">
-              </div>
+                @error('image')
+                <div class="invalid-feedback">
+                    {{ $message}}
+                </div>
+                @enderror
+            </div>
         </div>
         <div class="col-1">
             <div class="mb-3">
