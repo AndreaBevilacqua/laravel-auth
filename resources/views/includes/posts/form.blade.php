@@ -13,13 +13,18 @@
         <div class="col-12">
             <div class="mb-3">
                 <label for="title" class="form-label">Titolo</label>
-                <input type="text" name="title" class="form-control" id="title" placeholder="Titolo..." value="{{old('title', $project->title)}}" required>
+                <input type="text" name="title" class="form-control @error('title') is-invalid @elseif(old('title', '')) valid @enderror" id="title" placeholder="Titolo..." value="{{old('title', $project->title)}}" required>
+                @error('title')
+                <div class="invalid-feedback">
+                    {{ $message}}
+                </div>
+                @enderror
               </div>
         </div>
         <div class="col-12">
             <div class="mb-3">
                 <label for="content" class="form-label">Contenuto del post</label>
-                <textarea name="content" class="form-control" id="content" rows="10" required>
+                <textarea name="content" class="form-control @error('content') is-invalid @elseif(old('content', '')) valid @enderror" id="content" rows="10" required>
                     {{old('content', $project->content)}}
                 </textarea>
               </div>
@@ -27,7 +32,7 @@
         <div class="col-11">
             <div class="mb-3">
                 <label for="image" class="form-label">Inserisci un'immagine</label>
-                <input type="url" name="image" class="form-control" id="image" placeholder="Immagine..." value="{{old('image', $project->image)}}">
+                <input type="url" name="image" class="form-control @error('image') is-invalid @elseif(old('image', '')) valid @enderror" id="image" placeholder="Immagine..." value="{{old('image', $project->image)}}">
               </div>
         </div>
         <div class="col-1">

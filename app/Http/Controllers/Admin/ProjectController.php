@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 use App\Models\Project;
 use Illuminate\Http\Request;
@@ -33,6 +34,21 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'title' => 'required|string|min:5|max:50|unique:projects',
+            'content' => 'required|string',
+            'image' => 'nullable|url',
+            'is_published' => 'nullable|boolean'
+        ], [
+            'title.required' => 'Il titolo é obbligatorio',
+            'title.min' => 'Il titolo deve esssere almeno :min caratteri',
+            'title.max' => 'Il titolo deve esssere almeno :max caratteri',
+            'title.unique' => 'Non possono esister due proggetti con lo stesso titolo',
+            'image.url' => 'L\indirizzo inserito non é valido',
+            'is_published.coolean' => 'Il valore del campo non é valido',
+            'content.required' => 'Il contenuto é obbligatorio'
+        ]);
+
         $data = $request->all();
 
         $project = new Project();
@@ -67,6 +83,21 @@ class ProjectController extends Controller
      */
     public function update(Request $request, Project $project)
     {
+        $request->validate([
+            'title' => ['required', 'string', 'min:5', 'max:50', Rule::unique('projects')->ignore($project->id)],
+            'content' => 'required|string',
+            'image' => 'nullable|url',
+            'is_published' => 'nullable|boolean'
+        ], [
+            'title.required' => 'Il titolo é obbligatorio',
+            'title.min' => 'Il titolo deve esssere almeno :min caratteri',
+            'title.max' => 'Il titolo deve esssere almeno :max caratteri',
+            'title.unique' => 'Non possono esister due proggetti con lo stesso titolo',
+            'image.url' => 'L\indirizzo inserito non é valido',
+            'is_published.coolean' => 'Il valore del campo non é valido',
+            'content.required' => 'Il contenuto é obbligatorio'
+        ]);
+        
         $data = $request->all();
 
         $data['slug'] = Str::slug($data['title']);
