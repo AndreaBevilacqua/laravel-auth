@@ -1,9 +1,9 @@
 @if($project->exists)
-<form action="{{ route('admin.projects.update', $project)}}" method="POST" novalidate>
+<form action="{{ route('admin.projects.update', $project)}}" method="POST" enctype="multipart/form-data" novalidate>
     @method('PUT')
     
     @else
-    <form action="{{ route('admin.projects.store')}}" method="POST" novalidate>
+    <form action="{{ route('admin.projects.store')}}" method="POST" enctype="multipart/form-data" novalidate>
     
 @endif
 
@@ -13,7 +13,7 @@
         <div class="col-12">
             <div class="mb-3">
                 <label for="title" class="form-label">Titolo</label>
-                <input type="text" name="title" class="form-control @error('title') is-invalid @elseif(old('title', '')) valid @enderror" id="title" placeholder="Titolo..." value="{{old('title', $project->title)}}" required>
+                <input type="text" name="title" class="form-control @error('title') is-invalid @elseif(old('title', '')) is-valid @enderror" id="title" placeholder="Titolo..." value="{{old('title', $project->title)}}" required>
                 @error('title')
                 <div class="invalid-feedback">
                     {{ $message}}
@@ -24,7 +24,7 @@
         <div class="col-12">
             <div class="mb-3">
                 <label for="content" class="form-label">Contenuto del post</label>
-                <textarea name="content" class="form-control @error('content') is-invalid @elseif(old('content', '')) valid @enderror" id="content" rows="10" required>
+                <textarea name="content" class="form-control @error('content') is-invalid @elseif(old('content', '')) is-valid @enderror" id="content" rows="10" required>
                     {{old('content', $project->content)}}
                 </textarea>
                 @error('content')
@@ -37,17 +37,24 @@
         <div class="col-11">
             <div class="mb-3">
                 <label for="image" class="form-label">Inserisci un'immagine</label>
-                <input type="url" name="image" class="form-control @error('image') is-invalid @elseif(old('image', '')) valid @enderror" id="image" placeholder="Immagine..." value="{{old('image', $project->image)}}">
+                <input type="file" name="image" class="form-control @error('image') is-invalid @elseif(old('image', '')) is-valid @enderror" id="image" placeholder="Immagine..." value="{{old('image', $project->image)}}">
                 @error('image')
                 <div class="invalid-feedback">
                     {{ $message}}
+                </div>
+                @else
+                <div class="form-text">
+                    Carica un file immagine
                 </div>
                 @enderror
             </div>
         </div>
         <div class="col-1">
             <div class="mb-3">
-            <img src="{{old('image', $project->image ?? 'https://marcolanci.it/boolean/assets/placeholder.png')}}" class="img-fluid" alt="immagine post" id="preview">
+            <img src="{{ old('image', $project->image) 
+                ? asset('storage/' . old('image', $project->image))  
+                : 'https://marcolanci.it/boolean/assets/placeholder.png' }}" 
+                class="img-fluid" alt="immagine post" id="preview">
             </div>
         </div>
         <div class="col-12 d-flex justify-content-end">

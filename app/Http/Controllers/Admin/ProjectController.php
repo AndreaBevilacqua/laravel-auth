@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -37,14 +39,15 @@ class ProjectController extends Controller
         $request->validate([
             'title' => 'required|string|min:5|max:50|unique:projects',
             'content' => 'required|string',
-            'image' => 'nullable|url',
+            'image' => 'nullable|image|mimes:png,jpg,jpeg',
             'is_published' => 'nullable|boolean'
         ], [
             'title.required' => 'Il titolo é obbligatorio',
             'title.min' => 'Il titolo deve esssere almeno :min caratteri',
             'title.max' => 'Il titolo deve esssere almeno :max caratteri',
             'title.unique' => 'Non possono esister due proggetti con lo stesso titolo',
-            'image.url' => 'L\indirizzo inserito non é valido',
+            'image.image' => 'Il file inserito non é un\immagine',
+            'image.mimes' => 'Le estensioni valide sono :mimes',
             'is_published.coolean' => 'Il valore del campo non é valido',
             'content.required' => 'Il contenuto é obbligatorio'
         ]);
@@ -56,6 +59,15 @@ class ProjectController extends Controller
         $project->fill($data);
         $project->slug = Str::slug($project->title);
         $project->is_published = array_key_exists('is_published', $data);
+
+        // Controllo se mi arriva un file
+        if(Arr::exists($data, 'image')){
+            $extension = $data['image']->extension();
+
+            // Lo salvo e prendo l'url
+            $img_url = Storage::putFileAs('project_images', $data['image'], "$project->slug.$extension");
+            $project->image = $img_url;
+        }
 
         $project->save();
 
@@ -86,14 +98,15 @@ class ProjectController extends Controller
         $request->validate([
             'title' => ['required', 'string', 'min:5', 'max:50', Rule::unique('projects')->ignore($project->id)],
             'content' => 'required|string',
-            'image' => 'nullable|url',
+            'image' => 'nullable|image|mimes:png,jpg,jpeg',
             'is_published' => 'nullable|boolean'
         ], [
             'title.required' => 'Il titolo é obbligatorio',
             'title.min' => 'Il titolo deve esssere almeno :min caratteri',
             'title.max' => 'Il titolo deve esssere almeno :max caratteri',
             'title.unique' => 'Non possono esister due proggetti con lo stesso titolo',
-            'image.url' => 'L\indirizzo inserito non é valido',
+            'image.image' => 'Il file inserito non é un\immagine',
+            'image.mimes' => 'Le estensioni valide sono :mimes',
             'is_published.coolean' => 'Il valore del campo non é valido',
             'content.required' => 'Il contenuto é obbligatorio'
         ]);
@@ -102,6 +115,18 @@ class ProjectController extends Controller
 
         $data['slug'] = Str::slug($data['title']);
         $data['is_published'] = array_key_exists('is_published', $data);
+
+        // Controllo se mi arriva un file
+        if(Arr::exists($data, 'image')){
+            // Controllo se aveva giá una immagine
+            if($project->image) Storage::delete($project->image);
+
+            $extension = $data['image']->extension();
+
+            // Lo salvo e prendo l'url
+            $img_url = Storage::putFileAs('project_images', $data['image'], "{$data['slug']}.$extension");
+            $project->image = $img_url;
+        }
 
         $project->update($data);
 
